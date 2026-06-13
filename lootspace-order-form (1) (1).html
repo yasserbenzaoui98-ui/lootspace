@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>طلب — Pompe Eau Manual | Loot Space</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+
+  :root {
+    --brand:      #0A2540;
+    --brand-mid:  #1A4A7A;
+    --accent:     #00C2FF;
+    --accent-glow:#00C2FF22;
+    --surface:    #F4F8FF;
+    --card-bg:    #FFFFFF;
+    --border:     #D6E4F7;
+    --text:       #0A2540;
+    --muted:      #5A7A9A;
+    --success:    #0EA86A;
+    --danger:     #D84040;
+    --danger-bg:  #FFF0F0;
+  }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* ── Header bar ── */
+  .site-header {
+    background: var(--brand);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .site-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo-mark {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-mark i { font-size: 20px; color: var(--brand); }
+  .logo-text {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .logo-text span { color: var(--accent); }
+  .header-badge {
+    font-size: 12px;
+    background: var(--accent-glow);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Product hero strip ── */
+  .product-hero {
+    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 100%);
+    color: #fff;
+    padding: 28px 24px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .product-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 32px;
+    background: var(--surface);
+    clip-path: ellipse(55% 100% at 50% 100%);
+  }
+  .product-icon-wrap {
+    width: 70px; height: 70px;
+    background: rgba(0,194,255,0.15);
+    border: 2px solid rgba(0,194,255,0.4);
+    border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 14px;
+  }
+  .product-icon-wrap i { font-size: 34px; color: var(--accent); }
+  .product-hero h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 6px;
+    letter-spacing: 0.01em;
+  }
+  .product-hero p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    margin: 0;
+  }
+
+  /* ── Form card ── */
+  .form-container {
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 8px 16px 48px;
+  }
+  .form-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 28px 24px;
+    box-shadow: 0 4px 24px rgba(10,37,64,0.07);
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── Field ── */
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 7px;
+  }
+  .field label .req { color: var(--danger); margin-right: 2px; }
+  .input-wrap { position: relative; }
+  .input-wrap .field-icon {
+    position: absolute;
+    right: 13px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #B0C8E0;
+    pointer-events: none;
+    transition: color 0.15s;
+  }
+  .field input,
+  .field select {
+    width: 100%;
+    height: 48px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: #FAFCFF;
+    padding: 0 44px 0 16px;
+    font-size: 15px;
+    font-family: 'Cairo', sans-serif;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .field input:focus,
+  .field select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+    background: #fff;
+  }
+  .field input:focus ~ .field-icon,
+  .field select:focus ~ .field-icon { color: var(--accent); }
+  .field input.is-error,
+  .field select.is-error { border-color: var(--danger); box-shadow: 0 0 0 3px var(--danger-bg); }
+  .err-msg {
+    font-size: 12px;
+    color: var(--danger);
+    margin-top: 5px;
+    display: none;
+    align-items: center;
+    gap: 5px;
+  }
+  .err-msg.show { display: flex; }
+
+  /* ── Delivery cards ── */
+  .delivery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .delivery-opt input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+  .delivery-card {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    background: #FAFCFF;
+    padding: 16px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+  }
+  .delivery-card:hover { border-color: #90C5E8; }
+  .delivery-opt input:checked + .delivery-card {
+    border-color: var(--accent);
+    background: #E8F8FF;
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  .delivery-card i { font-size: 26px; color: #B0C8E0; transition: color 0.15s; }
+  .delivery-opt input:checked + .delivery-card i { color: var(--brand-mid); }
+  .delivery-card .d-title { font-size: 14px; font-weight: 700; color: var(--text); }
+  .delivery-card .d-sub { font-size: 12px; color: var(--muted); }
+  .delivery-opt input:checked + .delivery-card .d-title { color: var(--brand); }
+
+  /* ── Divider ── */
+  .form-divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  /* ── Submit ── */
+  .btn-order {
+    width: 100%;
+    height: 52px;
+    background: var(--brand);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Cairo', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    letter-spacing: 0.01em;
+  }
+  .btn-order:hover { background: var(--brand-mid); }
+  .btn-order:active { transform: scale(0.98); }
+  .btn-order i { font-size: 20px; }
+  .btn-order .accent-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  /* ── Security note ── */
+  .secure-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .secure-note i { font-size: 15px; color: var(--success); }
+
+  /* ── Success screen ── */
+  .success-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px 24px;
+    text-align: center;
+    gap: 14px;
+  }
+  .success-ring {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: #E6F9F1;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .success-ring i { font-size: 36px; color: var(--success); }
+  .success-screen h2 { font-size: 20px; font-weight: 700; margin: 0; color: var(--brand); }
+  .success-screen p { font-size: 14px; color: var(--muted); margin: 0; max-width: 320px; }
+  .summary-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 13px;
+    color: var(--text);
+    width: 100%;
+    max-width: 360px;
+    text-align: right;
+    line-height: 2;
+  }
+  .summary-pill strong { color: var(--brand); }
+  .btn-reset {
+    margin-top: 4px;
+    padding: 10px 28px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
+    font-size: 14px;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn-reset:hover { background: var(--surface); color: var(--brand); }
+
+  /* ── Footer ── */
+  .site-footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 0 0 24px;
+  }
+  .site-footer span { color: var(--accent); font-weight: 700; }
+
+  @media (max-width: 480px) {
+    .form-card { padding: 20px 16px 18px; }
+    .product-hero h1 { font-size: 18px; }
+    .delivery-card { padding: 12px 8px; }
+    .delivery-card i { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <a href="#" class="site-logo">
+    <div class="logo-mark"><i class="ti ti-bolt"></i></div>
+    <span class="logo-text">Loot <span>Space</span></span>
+  </a>
+  <div class="header-badge">طلب سريع</div>
+</header>
+
+<!-- Product hero -->
+<div class="product-hero">
+  <div class="product-icon-wrap">
+    <i class="ti ti-droplet"></i>
+  </div>
+  <h1>Pompe Eau Manual</h1>
+  <p>أدخل معلوماتك وسيتم التواصل معك لتأكيد الطلب</p>
+</div>
+
+<!-- Form area -->
+<div class="form-container">
+  <div class="form-card">
+
+    <div id="form-body">
+
+      <div class="section-label">معلومات الزبون</div>
+
+      <div class="field">
+        <label><span class="req">*</span> الاسم واللقب</label>
+        <div class="input-wrap">
+          <input type="text" id="fullname" placeholder="مثال: أحمد بن علي" autocomplete="name" />
+          <i class="ti ti-user field-icon"></i>
+        </div>
+        <div class="err-msg" id="err-name"><i class="ti ti-alert-circle"></i> الرجاء إدخال الاسم واللقب (3 أحرف على الأقل)</div>
+      </div>
+
+      <div class="field">
+        <label><span class="req">*</span> رقم الهاتف</label>
+        <div class="input-wrap">
+          <input type="tel" id="phone" placeholder="0555 123 456" maxlength="10" inputmode="numeric" autocomplete="tel" />
+          <i class="ti ti-phone field-icon"></i>
+        </div>
+        <div class="err-msg" id="err-phone"><i class="ti ti-alert-circle"></i> أدخل رقم هاتف جزائري صحيح (05/06/07 + 8 أرقام)</div>
+      </div>
+
+      <div class="field">
+        <label><span class="req">*</span> الولاية</label>
+        <div class="input-wrap">
+          <select id="wilaya">
+            <option value="">— اختر ولايتك —</option>
+          </select>
+          <i class="ti ti-map-pin field-icon"></i>
+        </div>
+        <div class="err-msg" id="err-wilaya"><i class="ti ti-alert-circle"></i> الرجاء اختيار الولاية</div>
+      </div>
+
+      <hr class="form-divider" />
+      <div class="section-label">نوع التوصيل</div>
+
+      <div class="field">
+        <div class="delivery-grid">
+          <div class="delivery-opt">
+            <input type="radio" name="delivery" id="stopdesk" value="stopdesk" />
+            <label class="delivery-card" for="stopdesk">
+              <i class="ti ti-building-store"></i>
+              <div class="d-title">Stop Desk</div>
+              <div class="d-sub">توصيل للمكتب</div>
+            </label>
+          </div>
+          <div class="delivery-opt">
+            <input type="radio" name="delivery" id="domicile" value="domicile" />
+            <label class="delivery-card" for="domicile">
+              <i class="ti ti-home"></i>
+              <div class="d-title">À domicile</div>
+              <div class="d-sub">توصيل للمنزل</div>
+            </label>
+          </div>
+        </div>
+        <div class="err-msg" id="err-delivery"><i class="ti ti-alert-circle"></i> الرجاء اختيار نوع التوصيل</div>
+      </div>
+
+      <hr class="form-divider" />
+
+      <button class="btn-order" onclick="submitForm()">
+        <span class="accent-dot"></span>
+        <i class="ti ti-shopping-cart-check"></i>
+        تأكيد الطلب الآن
+      </button>
+
+      <div class="secure-note">
+        <i class="ti ti-shield-check"></i>
+        معلوماتك محفوظة وآمنة تماماً
+      </div>
+
+    </div><!-- /form-body -->
+
+    <!-- Success screen -->
+    <div class="success-screen" id="success-screen">
+      <div class="success-ring"><i class="ti ti-check"></i></div>
+      <h2>تم استلام طلبك!</h2>
+      <p>شكراً لثقتك في <strong>Loot Space</strong>. فريقنا سيتصل بك قريباً لتأكيد الطلب.</p>
+      <div class="summary-pill" id="summary-box"></div>
+      <button class="btn-reset" onclick="resetForm()">
+        <i class="ti ti-plus" style="font-size:14px; vertical-align:-1px; margin-left:4px;"></i>
+        طلب جديد
+      </button>
+    </div>
+
+  </div><!-- /form-card -->
+
+  <div class="site-footer" style="margin-top:18px;">
+    © 2025 <span>Loot Space</span> — جميع الحقوق محفوظة
+  </div>
+</div>
+
+<script>
+  const wilayas = [
+    "01 - أدرار","02 - الشلف","03 - الأغواط","04 - أم البواقي","05 - باتنة",
+    "06 - بجاية","07 - بسكرة","08 - بشار","09 - البليدة","10 - البويرة",
+    "11 - تمنراست","12 - تبسة","13 - تلمسان","14 - تيارت","15 - تيزي وزو",
+    "16 - الجزائر","17 - الجلفة","18 - جيجل","19 - سطيف","20 - سعيدة",
+    "21 - سكيكدة","22 - سيدي بلعباس","23 - عنابة","24 - قالمة","25 - قسنطينة",
+    "26 - المدية","27 - مستغانم","28 - المسيلة","29 - معسكر","30 - ورقلة",
+    "31 - وهران","32 - البيض","33 - إليزي","34 - برج بوعريريج","35 - بومرداس",
+    "36 - الطارف","37 - تندوف","38 - تيسمسيلت","39 - الوادي","40 - خنشلة",
+    "41 - سوق أهراس","42 - تيبازة","43 - ميلة","44 - عين الدفلى","45 - النعامة",
+    "46 - عين تموشنت","47 - غرداية","48 - غليزان","49 - تيميمون","50 - برج باجي مختار",
+    "51 - أولاد جلال","52 - بني عباس","53 - إن صالح","54 - إن قزام","55 - توقرت",
+    "56 - جانت","57 - المغير","58 - المنيعة"
+  ];
+
+  const sel = document.getElementById('wilaya');
+  wilayas.forEach(w => {
+    const o = document.createElement('option');
+    o.value = w; o.textContent = w;
+    sel.appendChild(o);
+  });
+
+  document.getElementById('phone').addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g, '').slice(0, 10);
+  });
+
+  function setField(inputId, errId, valid) {
+    const el = document.getElementById(inputId);
+    el.classList.toggle('is-error', !valid);
+    const err = document.getElementById(errId);
+    err.classList.toggle('show', !valid);
+    return valid;
+  }
+
+  /* ── localStorage helpers ── */
+  const LS_KEY = 'lootspace_orders';
+
+  function loadOrders() {
+    try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; }
+    catch(e) { return []; }
+  }
+
+  function saveOrders(list) {
+    localStorage.setItem(LS_KEY, JSON.stringify(list));
+  }
+
+  function generateId(list) {
+    const nums = list.map(o => parseInt((o.id || '').replace('LS-', '')) || 0);
+    const next = (Math.max(0, ...nums) + 1).toString().padStart(3, '0');
+    return 'LS-' + next;
+  }
+
+  function submitForm() {
+    const name     = document.getElementById('fullname').value.trim();
+    const phone    = document.getElementById('phone').value.trim();
+    const wilaya   = document.getElementById('wilaya').value;
+    const delivery = document.querySelector('input[name="delivery"]:checked');
+
+    const v1 = setField('fullname', 'err-name',  name.length >= 3);
+    const v2 = setField('phone',    'err-phone', /^(05|06|07)\d{8}$/.test(phone));
+    const v3 = setField('wilaya',   'err-wilaya', wilaya !== '');
+    const v4 = (() => {
+      const err = document.getElementById('err-delivery');
+      err.classList.toggle('show', !delivery);
+      return !!delivery;
+    })();
+
+    if (!v1 || !v2 || !v3 || !v4) return;
+
+    /* ── Save to localStorage ── */
+    const list   = loadOrders();
+    const newId  = generateId(list);
+    const dVal   = delivery.value === 'stopdesk' ? 'desk' : 'home';
+    const dLabel = dVal === 'desk' ? 'Stop Desk (مكتب)' : 'À domicile (منزل)';
+
+    const order = {
+      id:       newId,
+      name:     name,
+      phone:    phone,
+      wilaya:   wilaya,
+      delivery: dVal,
+      status:   'wait',
+      date:     new Date().toLocaleDateString('ar-DZ')
+    };
+
+    list.unshift(order);
+    saveOrders(list);
+
+    /* ── Show success ── */
+    document.getElementById('summary-box').innerHTML =
+      `<strong>رقم الطلب:</strong> #${newId}<br>
+       <strong>المنتج:</strong> Pompe Eau Manual<br>
+       <strong>الاسم:</strong> ${name}<br>
+       <strong>الهاتف:</strong> ${phone}<br>
+       <strong>الولاية:</strong> ${wilaya}<br>
+       <strong>التوصيل:</strong> ${dLabel}`;
+
+    document.getElementById('form-body').style.display = 'none';
+    document.getElementById('success-screen').style.display = 'flex';
+  }
+
+  function resetForm() {
+    document.getElementById('fullname').value = '';
+    document.getElementById('phone').value = '';
+    document.getElementById('wilaya').value = '';
+    document.querySelectorAll('input[name="delivery"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.is-error').forEach(e => e.classList.remove('is-error'));
+    document.querySelectorAll('.err-msg.show').forEach(e => e.classList.remove('show'));
+    document.getElementById('success-screen').style.display = 'none';
+    document.getElementById('form-body').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
