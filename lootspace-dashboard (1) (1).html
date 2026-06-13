@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>لوحة التحكم — Loot Space</title>
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --sidebar-w: 230px;
+  --brand:     #0A2540;
+  --brand2:    #163D6A;
+  --accent:    #00C2FF;
+  --bg:        #F0F4FA;
+  --surface:   #FFFFFF;
+  --border:    #DDE6F2;
+  --text:      #0A2540;
+  --muted:     #6B83A0;
+  --faint:     #A8BCCF;
+
+  --s-wait:    #F59E0B;
+  --s-wait-bg: #FFFBEB;
+  --s-conf:    #0EA86A;
+  --s-conf-bg: #ECFDF5;
+  --s-del:     #3B82F6;
+  --s-del-bg:  #EFF6FF;
+  --s-cancel:  #EF4444;
+  --s-cancel-bg:#FEF2F2;
+  --s-liv:     #8B5CF6;
+  --s-liv-bg:  #F5F3FF;
+}
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ─── Sidebar ─── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--brand);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  z-index: 100;
+  transition: transform 0.25s;
+}
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.logo-mark {
+  width: 36px; height: 36px;
+  background: var(--accent);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.logo-mark i { font-size: 20px; color: var(--brand); }
+.logo-text { font-size: 16px; font-weight: 700; color: #fff; letter-spacing: 0.04em; text-transform: uppercase; }
+.logo-text span { color: var(--accent); }
+
+.nav-section { padding: 20px 12px 6px; }
+.nav-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.3); letter-spacing: 0.12em; text-transform: uppercase; padding: 0 8px 10px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  cursor: pointer;
+  color: rgba(255,255,255,0.55);
+  font-size: 14px; font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+  margin-bottom: 2px;
+  text-decoration: none;
+}
+.nav-item:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.9); }
+.nav-item.active { background: rgba(0,194,255,0.13); color: var(--accent); }
+.nav-item.active i { color: var(--accent); }
+.nav-item i { font-size: 18px; color: rgba(255,255,255,0.4); transition: color 0.15s; }
+.nav-item:hover i { color: rgba(255,255,255,0.8); }
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; gap: 10px;
+}
+.avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(0,194,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: var(--accent);
+  flex-shrink: 0;
+}
+.sf-name { font-size: 13px; font-weight: 600; color: #fff; }
+.sf-role { font-size: 11px; color: rgba(255,255,255,0.4); }
+
+/* ─── Main ─── */
+.main {
+  margin-right: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ─── Topbar ─── */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar-title { font-size: 17px; font-weight: 700; color: var(--brand); }
+.topbar-title span { color: var(--muted); font-weight: 400; font-size: 14px; margin-right: 8px; }
+.topbar-actions { display: flex; align-items: center; gap: 10px; }
+.btn-icon {
+  width: 36px; height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--muted);
+  transition: background 0.15s, color 0.15s;
+}
+.btn-icon:hover { background: var(--bg); color: var(--brand); }
+.btn-icon i { font-size: 18px; }
+.btn-add {
+  display: flex; align-items: center; gap: 6px;
+  padding: 0 16px; height: 36px;
+  background: var(--brand);
+  color: #fff; border: none; border-radius: 9px;
+  font-size: 13px; font-weight: 600; font-family: 'Cairo', sans-serif;
+  cursor: pointer; transition: background 0.15s;
+}
+.btn-add:hover { background: var(--brand2); }
+.btn-add i { font-size: 16px; }
+
+/* ─── Content ─── */
+.content { padding: 24px 28px; flex: 1; }
+
+/* ─── Stats cards ─── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 20px 18px;
+  display: flex; flex-direction: column; gap: 12px;
+  position: relative; overflow: hidden;
+  transition: box-shadow 0.15s;
+}
+.stat-card:hover { box-shadow: 0 4px 20px rgba(10,37,64,0.08); }
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 4px; height: 100%;
+  border-radius: 0 14px 14px 0;
+}
+.stat-card.total::before  { background: var(--brand); }
+.stat-card.conf::before   { background: var(--s-conf); }
+.stat-card.encours::before{ background: var(--s-del); }
+.stat-card.livr::before   { background: var(--s-liv); }
+
+.stat-top { display: flex; align-items: center; justify-content: space-between; }
+.stat-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+}
+.stat-icon i { font-size: 20px; }
+.stat-card.total  .stat-icon { background: #EEF3FF; } .stat-card.total  .stat-icon i { color: var(--brand); }
+.stat-card.conf   .stat-icon { background: var(--s-conf-bg); } .stat-card.conf   .stat-icon i { color: var(--s-conf); }
+.stat-card.encours.stat-icon { background: var(--s-del-bg);  } .stat-card.encours .stat-icon i { color: var(--s-del); }
+.stat-card.encours .stat-icon { background: var(--s-del-bg); }
+.stat-card.livr   .stat-icon { background: var(--s-liv-bg);  } .stat-card.livr   .stat-icon i { color: var(--s-liv); }
+.stat-trend { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 3px; }
+.stat-trend.up { color: var(--s-conf); }
+.stat-trend.down { color: var(--s-cancel); }
+.stat-num { font-size: 32px; font-weight: 700; color: var(--brand); line-height: 1; }
+.stat-label { font-size: 13px; color: var(--muted); font-weight: 500; }
+
+/* ─── Table card ─── */
+.table-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.table-toolbar {
+  padding: 18px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.toolbar-left { display: flex; flex-direction: column; gap: 2px; }
+.toolbar-left h2 { font-size: 15px; font-weight: 700; color: var(--brand); }
+.toolbar-left p { font-size: 12px; color: var(--muted); }
+.toolbar-right { display: flex; align-items: center; gap: 10px; }
+.search-wrap {
+  display: flex; align-items: center; gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 0 12px;
+  background: var(--bg);
+  height: 36px;
+  min-width: 220px;
+}
+.search-wrap i { color: var(--faint); font-size: 16px; flex-shrink: 0; }
+.search-wrap input {
+  border: none; background: transparent; outline: none;
+  font-size: 13px; font-family: 'Cairo', sans-serif; color: var(--text);
+  flex: 1; text-align: right;
+}
+.search-wrap input::placeholder { color: var(--faint); }
+.filter-select {
+  height: 36px; border: 1px solid var(--border); border-radius: 9px;
+  background: var(--bg); padding: 0 12px;
+  font-size: 13px; font-family: 'Cairo', sans-serif; color: var(--muted);
+  outline: none; cursor: pointer;
+}
+.filter-select:focus { border-color: var(--accent); }
+
+/* ─── Table ─── */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--bg); }
+thead th {
+  padding: 12px 16px;
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  text-align: right; letter-spacing: 0.06em; text-transform: uppercase;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #F7FAFF; }
+tbody tr.row-new { background: #ECFDF5; animation: fadeNew 0.6s ease; }
+@keyframes fadeNew { from { background: #BBFBDC; } to { background: #ECFDF5; } }
+tbody td {
+  padding: 13px 16px;
+  font-size: 13px; color: var(--text);
+  vertical-align: middle; white-space: nowrap;
+}
+.cell-id { font-size: 12px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+.cell-name { font-weight: 600; color: var(--brand); }
+.cell-phone { font-family: monospace; font-size: 13px; direction: ltr; display: inline-block; }
+.cell-wilaya { font-size: 12px; }
+.delivery-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+}
+.delivery-badge.home  { background: #EFF6FF; color: #2563EB; }
+.delivery-badge.desk  { background: #F5F3FF; color: #7C3AED; }
+.status-select {
+  border: 1px solid var(--border); border-radius: 7px;
+  padding: 5px 10px; font-size: 12px; font-weight: 600;
+  font-family: 'Cairo', sans-serif; cursor: pointer; outline: none;
+  transition: border-color 0.15s;
+}
+.status-select:focus { border-color: var(--accent); }
+.status-select.wait   { background: var(--s-wait-bg);   color: var(--s-wait);   border-color: #FDE68A; }
+.status-select.conf   { background: var(--s-conf-bg);   color: var(--s-conf);   border-color: #6EE7B7; }
+.status-select.del    { background: var(--s-del-bg);    color: var(--s-del);    border-color: #BFDBFE; }
+.status-select.cancel { background: var(--s-cancel-bg); color: var(--s-cancel); border-color: #FECACA; }
+.status-select.liv    { background: var(--s-liv-bg);    color: var(--s-liv);    border-color: #DDD6FE; }
+
+.actions-cell { display: flex; align-items: center; gap: 6px; }
+.act-btn {
+  width: 30px; height: 30px; border-radius: 7px; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  background: var(--surface); transition: all 0.15s;
+}
+.act-btn i { font-size: 15px; }
+.act-btn.edit { color: var(--brand2); }
+.act-btn.edit:hover { background: #EEF3FF; border-color: #B0C8F0; }
+.act-btn.del  { color: var(--s-cancel); }
+.act-btn.del:hover  { background: var(--s-cancel-bg); border-color: #FECACA; }
+
+/* ─── Empty state ─── */
+.empty-state {
+  padding: 56px 20px;
+  text-align: center;
+  color: var(--muted);
+  display: none;
+  flex-direction: column; align-items: center; gap: 10px;
+}
+.empty-state i { font-size: 40px; color: var(--faint); }
+.empty-state p { font-size: 14px; }
+
+/* ─── Table footer ─── */
+.table-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.tf-count { font-size: 12px; color: var(--muted); }
+
+/* ─── Toast ─── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--brand); color: #fff;
+  padding: 12px 22px; border-radius: 12px;
+  font-size: 13px; font-weight: 600;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 8px 30px rgba(10,37,64,0.25);
+  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), opacity 0.3s;
+  opacity: 0; z-index: 9999; white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast i { font-size: 16px; }
+.toast.success i { color: var(--accent); }
+.toast.danger i  { color: #F87171; }
+
+/* ─── Modal ─── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,37,64,0.45);
+  display: none; align-items: center; justify-content: center;
+  z-index: 200;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: var(--surface); border-radius: 16px;
+  padding: 28px; width: 420px; max-width: 95vw;
+  box-shadow: 0 20px 60px rgba(10,37,64,0.2);
+  direction: rtl;
+}
+.modal-box h3 { font-size: 16px; font-weight: 700; color: var(--brand); margin-bottom: 20px; }
+.modal-field { margin-bottom: 14px; }
+.modal-field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+.modal-field input, .modal-field select {
+  width: 100%; height: 42px; border: 1px solid var(--border);
+  border-radius: 9px; padding: 0 12px;
+  font-size: 14px; font-family: 'Cairo', sans-serif; color: var(--text);
+  outline: none; background: var(--bg);
+}
+.modal-field input:focus, .modal-field select:focus { border-color: var(--accent); background: #fff; }
+.modal-actions { display: flex; gap: 10px; margin-top: 22px; }
+.btn-save {
+  flex: 1; height: 42px; background: var(--brand); color: #fff;
+  border: none; border-radius: 9px; font-size: 14px; font-weight: 700;
+  font-family: 'Cairo', sans-serif; cursor: pointer; transition: background 0.15s;
+}
+.btn-save:hover { background: var(--brand2); }
+.btn-cancel-modal {
+  height: 42px; padding: 0 20px; border: 1px solid var(--border);
+  border-radius: 9px; background: var(--surface); font-size: 14px;
+  font-family: 'Cairo', sans-serif; color: var(--muted); cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-cancel-modal:hover { background: var(--bg); }
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 700px) {
+  :root { --sidebar-w: 0px; }
+  .sidebar { transform: translateX(100%); }
+  .sidebar.open { transform: translateX(0); --sidebar-w: 230px; }
+  .main { margin-right: 0; }
+  .topbar { padding: 12px 16px; }
+  .content { padding: 16px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .toolbar-right { width: 100%; }
+  .search-wrap { min-width: unset; flex: 1; }
+}
+@media (max-width: 400px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark"><i class="ti ti-bolt"></i></div>
+    <span class="logo-text">Loot <span>Space</span></span>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">القائمة الرئيسية</div>
+    <a class="nav-item active" href="#">
+      <i class="ti ti-layout-dashboard"></i> لوحة التحكم
+    </a>
+    <a class="nav-item" href="#">
+      <i class="ti ti-shopping-cart"></i> الطلبات
+    </a>
+    <a class="nav-item" href="#">
+      <i class="ti ti-package"></i> المنتجات
+    </a>
+    <a class="nav-item" href="#">
+      <i class="ti ti-users"></i> الزبائن
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">الإعدادات</div>
+    <a class="nav-item" href="#">
+      <i class="ti ti-chart-bar"></i> التقارير
+    </a>
+    <a class="nav-item" href="#">
+      <i class="ti ti-settings"></i> الإعدادات
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="avatar">LS</div>
+    <div>
+      <div class="sf-name">Loot Space</div>
+      <div class="sf-role">مدير المتجر</div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title">
+      إدارة الطلبات
+      <span>/ Pompe Eau Manual</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn-icon" title="إشعارات"><i class="ti ti-bell"></i></button>
+      <button class="btn-icon" onclick="exportCSV()" title="تصدير"><i class="ti ti-download"></i></button>
+      <button class="btn-add" onclick="openModal()">
+        <i class="ti ti-plus"></i> طلب جديد
+      </button>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card total">
+        <div class="stat-top">
+          <div class="stat-icon"><i class="ti ti-clipboard-list"></i></div>
+          <span class="stat-trend up"><i class="ti ti-trending-up" style="font-size:13px"></i> +12%</span>
+        </div>
+        <div class="stat-num" id="count-total">0</div>
+        <div class="stat-label">إجمالي الطلبات</div>
+      </div>
+      <div class="stat-card conf">
+        <div class="stat-top">
+          <div class="stat-icon"><i class="ti ti-circle-check"></i></div>
+          <span class="stat-trend up"><i class="ti ti-trending-up" style="font-size:13px"></i> +8%</span>
+        </div>
+        <div class="stat-num" id="count-conf">0</div>
+        <div class="stat-label">مؤكد</div>
+      </div>
+      <div class="stat-card encours">
+        <div class="stat-top">
+          <div class="stat-icon"><i class="ti ti-truck-delivery"></i></div>
+          <span class="stat-trend up"><i class="ti ti-trending-up" style="font-size:13px"></i> +3%</span>
+        </div>
+        <div class="stat-num" id="count-del">0</div>
+        <div class="stat-label">قيد التوصيل</div>
+      </div>
+      <div class="stat-card livr">
+        <div class="stat-top">
+          <div class="stat-icon"><i class="ti ti-home-check"></i></div>
+          <span class="stat-trend down"><i class="ti ti-trending-down" style="font-size:13px"></i> -2%</span>
+        </div>
+        <div class="stat-num" id="count-liv">0</div>
+        <div class="stat-label">تم التوصيل</div>
+      </div>
+    </div>
+
+    <!-- Table card -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div class="toolbar-left">
+          <h2>قائمة الطلبات</h2>
+          <p id="result-count">جارٍ التحميل…</p>
+        </div>
+        <div class="toolbar-right">
+          <div class="search-wrap">
+            <i class="ti ti-search"></i>
+            <input type="text" id="search-input" placeholder="بحث بالاسم أو الولاية…" oninput="renderTable()" />
+          </div>
+          <select class="filter-select" id="status-filter" onchange="renderTable()">
+            <option value="">كل الحالات</option>
+            <option value="wait">قيد الانتظار</option>
+            <option value="conf">مؤكد</option>
+            <option value="del">قيد التوصيل</option>
+            <option value="liv">تم التوصيل</option>
+            <option value="cancel">ملغي</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>المعرف</th>
+              <th>الاسم واللقب</th>
+              <th>الهاتف</th>
+              <th>الولاية</th>
+              <th>التوصيل</th>
+              <th>التاريخ</th>
+              <th>الحالة</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="orders-tbody"></tbody>
+        </table>
+        <div class="empty-state" id="empty-state">
+          <i class="ti ti-inbox"></i>
+          <p>لا توجد طلبات تطابق البحث</p>
+        </div>
+      </div>
+
+      <div class="table-footer">
+        <span class="tf-count" id="footer-count"></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <i class="ti ti-check"></i>
+  <span id="toast-msg">تم الحفظ</span>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+  <div class="modal-box">
+    <h3 id="modal-title">إضافة طلب جديد</h3>
+    <div class="modal-field">
+      <label>الاسم واللقب</label>
+      <input type="text" id="m-name" placeholder="أحمد بن علي" />
+    </div>
+    <div class="modal-field">
+      <label>رقم الهاتف</label>
+      <input type="tel" id="m-phone" placeholder="0555 123 456" maxlength="10" inputmode="numeric" />
+    </div>
+    <div class="modal-field">
+      <label>الولاية</label>
+      <select id="m-wilaya"></select>
+    </div>
+    <div class="modal-field">
+      <label>نوع التوصيل</label>
+      <select id="m-delivery">
+        <option value="home">À domicile — توصيل للمنزل</option>
+        <option value="desk">Stop Desk — توصيل للمكتب</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>الحالة</label>
+      <select id="m-status">
+        <option value="wait">قيد الانتظار</option>
+        <option value="conf">مؤكد</option>
+        <option value="del">قيد التوصيل</option>
+        <option value="liv">تم التوصيل</option>
+        <option value="cancel">ملغي</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="saveModal()">حفظ الطلب</button>
+      <button class="btn-cancel-modal" onclick="closeModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const WILAYAS = [
+  "01 - أدرار","02 - الشلف","03 - الأغواط","04 - أم البواقي","05 - باتنة",
+  "06 - بجاية","07 - بسكرة","08 - بشار","09 - البليدة","10 - البويرة",
+  "11 - تمنراست","12 - تبسة","13 - تلمسان","14 - تيارت","15 - تيزي وزو",
+  "16 - الجزائر","17 - الجلفة","18 - جيجل","19 - سطيف","20 - سعيدة",
+  "21 - سكيكدة","22 - سيدي بلعباس","23 - عنابة","24 - قالمة","25 - قسنطينة",
+  "26 - المدية","27 - مستغانم","28 - المسيلة","29 - معسكر","30 - ورقلة",
+  "31 - وهران","32 - البيض","33 - إليزي","34 - برج بوعريريج","35 - بومرداس",
+  "36 - الطارف","37 - تندوف","38 - تيسمسيلت","39 - الوادي","40 - خنشلة",
+  "41 - سوق أهراس","42 - تيبازة","43 - ميلة","44 - عين الدفلى","45 - النعامة",
+  "46 - عين تموشنت","47 - غرداية","48 - غليزان","49 - تيميمون","50 - برج باجي مختار",
+  "51 - أولاد جلال","52 - بني عباس","53 - إن صالح","54 - إن قزام","55 - توقرت",
+  "56 - جانت","57 - المغير","58 - المنيعة"
+];
+
+const STATUS_MAP = {
+  wait:   { label: 'قيد الانتظار', cls: 'wait' },
+  conf:   { label: 'مؤكد',         cls: 'conf' },
+  del:    { label: 'قيد التوصيل', cls: 'del'  },
+  liv:    { label: 'تم التوصيل',  cls: 'liv'  },
+  cancel: { label: 'ملغي',         cls: 'cancel'}
+};
+
+const LS_KEY = 'lootspace_orders';
+
+/* ── Seed demo data only if storage is empty ── */
+const DEMO = [
+  { id:'LS-001', name:'أحمد بن علي',     phone:'0551234567', wilaya:'16 - الجزائر',   delivery:'home', status:'conf',   date:'01/06/2025' },
+  { id:'LS-002', name:'فاطمة زهراء',     phone:'0661234567', wilaya:'31 - وهران',     delivery:'desk', status:'wait',   date:'02/06/2025' },
+  { id:'LS-003', name:'كريم بوعلام',     phone:'0771234567', wilaya:'25 - قسنطينة',   delivery:'home', status:'del',    date:'03/06/2025' },
+  { id:'LS-004', name:'سمير حمداني',     phone:'0551112233', wilaya:'19 - سطيف',      delivery:'desk', status:'liv',    date:'04/06/2025' },
+  { id:'LS-005', name:'نور الهدى بن سعد',phone:'0661122334', wilaya:'06 - بجاية',     delivery:'home', status:'conf',   date:'05/06/2025' },
+  { id:'LS-006', name:'عبد الرحمن قاسم', phone:'0551334455', wilaya:'09 - البليدة',   delivery:'desk', status:'cancel', date:'06/06/2025' },
+  { id:'LS-007', name:'إيمان شريف',      phone:'0771223344', wilaya:'15 - تيزي وزو',  delivery:'home', status:'wait',   date:'07/06/2025' },
+  { id:'LS-008', name:'يوسف بلحاج',      phone:'0551445566', wilaya:'23 - عنابة',     delivery:'desk', status:'del',    date:'08/06/2025' },
+];
+
+function loadOrders() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) return JSON.parse(raw);
+    localStorage.setItem(LS_KEY, JSON.stringify(DEMO));
+    return DEMO.slice();
+  } catch(e) { return DEMO.slice(); }
+}
+
+function persist() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(orders)); } catch(e) {}
+}
+
+let orders = loadOrders();
+let editId = null;
+
+function nextId() {
+  const nums = orders.map(o => parseInt(o.id.replace('LS-','')) || 0);
+  const n = (Math.max(0, ...nums) + 1).toString().padStart(3,'0');
+  return 'LS-' + n;
+}
+
+function updateStats() {
+  document.getElementById('count-total').textContent = orders.length;
+  document.getElementById('count-conf').textContent  = orders.filter(o=>o.status==='conf').length;
+  document.getElementById('count-del').textContent   = orders.filter(o=>o.status==='del').length;
+  document.getElementById('count-liv').textContent   = orders.filter(o=>o.status==='liv').length;
+}
+
+function filtered() {
+  const q  = (document.getElementById('search-input').value || '').trim().toLowerCase();
+  const sf = document.getElementById('status-filter').value;
+  return orders.filter(o => {
+    const match = !q || o.name.toLowerCase().includes(q) || o.wilaya.toLowerCase().includes(q) || o.phone.includes(q) || o.id.toLowerCase().includes(q);
+    const statOk = !sf || o.status === sf;
+    return match && statOk;
+  });
+}
+
+function renderTable() {
+  const rows = filtered();
+  const tbody = document.getElementById('orders-tbody');
+  const empty = document.getElementById('empty-state');
+  document.getElementById('result-count').textContent = `${rows.length} طلب من أصل ${orders.length}`;
+  document.getElementById('footer-count').textContent = `إجمالي النتائج: ${rows.length}`;
+
+  if (!rows.length) {
+    tbody.innerHTML = '';
+    empty.style.display = 'flex';
+    return;
+  }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = rows.map(o => {
+    const s = STATUS_MAP[o.status];
+    const isNew = newOrderIds.has(o.id);
+    const dBadge = o.delivery === 'home'
+      ? `<span class="delivery-badge home"><i class="ti ti-home" style="font-size:13px"></i> À domicile</span>`
+      : `<span class="delivery-badge desk"><i class="ti ti-building-store" style="font-size:13px"></i> Stop Desk</span>`;
+    const opts = Object.entries(STATUS_MAP).map(([k,v]) =>
+      `<option value="${k}" ${k===o.status?'selected':''}>${v.label}</option>`).join('');
+    return `<tr ${isNew ? 'class="row-new"' : ''}>
+      <td><span class="cell-id">#${o.id}</span></td>
+      <td><span class="cell-name">${o.name}</span></td>
+      <td><span class="cell-phone">${o.phone}</span></td>
+      <td><span class="cell-wilaya">${o.wilaya}</span></td>
+      <td>${dBadge}</td>
+      <td><span style="font-size:12px;color:var(--muted)">${o.date||'—'}</span></td>
+      <td>
+        <select class="status-select ${s.cls}" onchange="changeStatus('${o.id}', this.value)">
+          ${opts}
+        </select>
+      </td>
+      <td>
+        <div class="actions-cell">
+          <button class="act-btn edit" onclick="openModal('${o.id}')" title="تعديل"><i class="ti ti-edit"></i></button>
+          <button class="act-btn del"  onclick="deleteOrder('${o.id}')" title="حذف"><i class="ti ti-trash"></i></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  updateStats();
+}
+
+function changeStatus(id, val) {
+  const o = orders.find(x => x.id === id);
+  if (o) { o.status = val; persist(); renderTable(); showToast('تم تحديث حالة الطلب #' + id, 'success'); }
+}
+
+function deleteOrder(id) {
+  if (!confirm('هل تريد حذف الطلب ' + id + '؟')) return;
+  orders = orders.filter(o => o.id !== id);
+  persist();
+  renderTable();
+  showToast('تم حذف الطلب #' + id, 'danger');
+}
+
+function openModal(id) {
+  editId = id || null;
+  const modal = document.getElementById('modal');
+  const o = id ? orders.find(x => x.id === id) : null;
+  document.getElementById('modal-title').textContent = o ? 'تعديل الطلب #' + id : 'إضافة طلب جديد';
+  document.getElementById('m-name').value     = o ? o.name     : '';
+  document.getElementById('m-phone').value    = o ? o.phone    : '';
+  document.getElementById('m-delivery').value = o ? o.delivery : 'home';
+  document.getElementById('m-status').value   = o ? o.status   : 'wait';
+  const ws = document.getElementById('m-wilaya');
+  ws.innerHTML = WILAYAS.map(w => `<option value="${w}" ${o && o.wilaya===w ? 'selected':''}>${w}</option>`).join('');
+  modal.classList.add('show');
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('show'); }
+function closeModalOutside(e) { if (e.target === document.getElementById('modal')) closeModal(); }
+
+function saveModal() {
+  const name     = document.getElementById('m-name').value.trim();
+  const phone    = document.getElementById('m-phone').value.trim();
+  const wilaya   = document.getElementById('m-wilaya').value;
+  const delivery = document.getElementById('m-delivery').value;
+  const status   = document.getElementById('m-status').value;
+  if (!name || name.length < 2) { alert('الرجاء إدخال الاسم'); return; }
+  if (!/^(05|06|07)\d{8}$/.test(phone)) { alert('رقم الهاتف غير صحيح'); return; }
+
+  if (editId) {
+    const o = orders.find(x => x.id === editId);
+    if (o) Object.assign(o, { name, phone, wilaya, delivery, status });
+    showToast('تم تحديث الطلب #' + editId, 'success');
+  } else {
+    orders.unshift({ id: nextId(), name, phone, wilaya, delivery, status, date: new Date().toLocaleDateString('ar-DZ') });
+    showToast('تم إضافة طلب جديد بنجاح', 'success');
+  }
+  persist();
+  closeModal();
+  renderTable();
+}
+
+let toastTimer;
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  const icon = t.querySelector('i');
+  document.getElementById('toast-msg').textContent = msg;
+  icon.className = type === 'danger' ? 'ti ti-trash' : 'ti ti-check';
+  t.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function exportCSV() {
+  const rows = [['المعرف','الاسم','الهاتف','الولاية','التوصيل','الحالة']];
+  filtered().forEach(o => rows.push([o.id, o.name, o.phone, o.wilaya,
+    o.delivery==='home'?'À domicile':'Stop Desk', STATUS_MAP[o.status].label]));
+  const csv = rows.map(r => r.map(c => '"'+c+'"').join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'}));
+  a.download = 'lootspace-orders.csv';
+  a.click();
+  showToast('تم تصدير الطلبات بنجاح', 'success');
+}
+
+document.getElementById('m-phone').addEventListener('input', function() {
+  this.value = this.value.replace(/\D/g,'').slice(0,10);
+});
+
+/* ── New-order tracking ── */
+let knownIds    = new Set(orders.map(o => o.id));
+let newOrderIds = new Set();
+
+function syncFromStorage() {
+  try {
+    const fresh = JSON.parse(localStorage.getItem(LS_KEY)) || [];
+    const incoming = fresh.filter(o => !knownIds.has(o.id));
+    if (incoming.length) {
+      incoming.forEach(o => { knownIds.add(o.id); newOrderIds.add(o.id); });
+      orders = fresh;
+      renderTable();
+      showToast(`طلب جديد وصل: ${incoming[0].name} 🎉`, 'success');
+      /* clear highlight after 6 s */
+      setTimeout(() => { newOrderIds.clear(); renderTable(); }, 6000);
+    }
+  } catch(e) {}
+}
+
+/* Cross-tab sync (works when dashboard & form are open in different tabs) */
+window.addEventListener('storage', e => { if (e.key === LS_KEY) syncFromStorage(); });
+
+/* Same-tab polling every 3 s (fallback for same-tab navigation) */
+setInterval(syncFromStorage, 3000);
+
+renderTable();
+</script>
+</body>
+</html>
